@@ -1,0 +1,11 @@
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.vscode/
+.env
+# Ignore the virtual environment directory
+venv/
+
+# Ignore SQLite database file
+db.sqlite3
