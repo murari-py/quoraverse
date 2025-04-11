@@ -1,0 +1,86 @@
+{% extends "users_management/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2 class="mb-4 text-primary">📝 All Questions</h2>
+
+    <ul class="list-group mb-5 shadow-sm">
+        {% for question in questions %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{% url 'question_detail' question.pk %}" class="text-decoration-none fw-bold">{{ question.title }}</a>
+                </div>
+                <small class="text-muted">Asked by <span class="fw-semibold">{{ question.author.username }}</span></small>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-muted">No questions yet.</li>
+        {% endfor %}
+    </ul>
+
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+        <span class="page-link">Previous</span>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+        <span class="page-link">Next</span>
+        </li>
+        {% endif %}
+
+    </ul>
+    </nav>
+    {% endif %}
+
+
+    {% if user.is_authenticated %}
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <h4 class="mb-0">Ask a Question</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_title" class="form-label">Title</label>
+                    {{ form.title|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_body" class="form-label">Body</label>
+                    {{ form.body|add_class:"form-control" }}
+                </div>
+                <button type="submit" class="btn btn-success">Post Question</button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            <a href="{% url 'login' %}">Login</a> to ask a question.
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

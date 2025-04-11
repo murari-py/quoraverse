@@ -5,10 +5,9 @@ from users_management import views
 
 
 urlpatterns = [
-    path("home/", views.home, name="home"),
     path("signup/", views.SignUpView.as_view(), name="signup"),
     path(
-        "",
+        "login/",
         auth_views.LoginView.as_view(template_name="users_management/login.html"),
         name="login",
     ),

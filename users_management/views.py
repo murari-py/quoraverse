@@ -8,11 +8,6 @@ from django.contrib.auth import authenticate
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 
-@login_required
-def home(request):
-    return render(request, 'users_management/home.html')
-
-
 
 class SignUpView(FormView):
     template_name = 'users_management/register.html'
